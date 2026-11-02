@@ -1,0 +1,22 @@
+service: miguelespinozaa
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: dev # Stage por defecto
+  environment:
+    # Variable de entorno que contiene el nombre del bucket según el stage
+    INGESTA_BUCKET: !Ref IngestaBucket
+
+functions:
+  comentario:
+    handler: comentario.lambda_handler
+    # ... otros eventos
+
+resources:
+  Resources:
+    IngestaBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        # Nombre dinámico: mi-bucket-ingesta-dev, mi-bucket-ingesta-prod, etc.
+        BucketName: !Sub "mi-bucket-ingesta-${sls:stage}"
